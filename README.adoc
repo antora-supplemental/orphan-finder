@@ -1,0 +1,35 @@
+= Orphan Finder
+:description: Find unresolved include:: / attribute refs + unused; triage HTML via triage-ux-kit.
+:page-orig-author: Ryan Johnson
+:page-last-edited: 2026-09-27
+
+**Orphan Finder** scans AsciiDoc trees for unresolved `include::` targets and `{attribute}` references, plus unused attribute definitions and unreferenced partials. Emits JSON + a triage HTML page built with https://github.com/antora-supplemental/triage-ux-kit[triage-ux-kit].
+
+Support: support@devcentr.org
+
+== Install
+
+[source,bash]
+----
+pnpm add -D github:antora-supplemental/orphan-finder#v0.1.0
+----
+
+Primary distribution is the GitHub SemVer URL pin.
+
+== CLI
+
+[source,bash]
+----
+npx orphan-finder --root ./docs --out ./build/orphan-finder [--fail] [--json]
+----
+
+== Antora extension (optional)
+
+[source,yaml]
+----
+antora:
+  extensions:
+    - require: '@antora-supplemental/orphan-finder/extension'
+      reportEmail: support@devcentr.org
+      failOnUnresolved: false
+----
