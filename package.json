@@ -1,6 +1,6 @@
 {
   "name": "@antora-supplemental/orphan-finder",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI (+ optional Antora extension): find unresolved include:: and attribute refs + unused; JSON + triage HTML",
   "license": "MIT",
   "author": "Ryan Johnson (https://github.com/AMDphreak)",

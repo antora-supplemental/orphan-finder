@@ -3,6 +3,9 @@
 
 const path = require('node:path')
 const { scanOrphans, buildReport, writeOutputs } = require('../lib/index.js')
+const { createProgress } = require('../lib/progress.js')
+
+const TOOL = 'orphan-finder'
 
 function parseArgs (argv) {
   const opts = { root: '.', out: 'orphan-finder-report', reportEmail: 'support@devcentr.org', fail: false, jsonStdout: false }
@@ -26,15 +29,24 @@ function main () {
     console.log('Usage: orphan-finder [--root DIR] [--out DIR] [--report-email ADDR] [--fail] [--json]\nSupport: support@devcentr.org')
     process.exit(0)
   }
-  const scan = scanOrphans(path.resolve(opts.root))
+  const progress = createProgress({ id: TOOL, stream: process.stderr })
+  progress.starting('starting orphan scan')
+  progress.enumStart('files')
+  const scan = scanOrphans(path.resolve(opts.root), {
+    onFile (n) { progress.enumTick(n) },
+    onWalkDone (n) { progress.enumDone(n) },
+    onScan (i, total) { progress.tick(i, total) },
+  })
   const report = buildReport(scan, { reportEmail: opts.reportEmail })
   const outDir = path.resolve(opts.out)
   writeOutputs(report, outDir)
   if (opts.jsonStdout) console.log(JSON.stringify(report, null, 2))
   else {
-    console.log(`orphan-finder: scanned ${report.summary.filesScanned} file(s)`)
-    console.log(`  findings: ${report.summary.findings} (unresolved=${report.summary.unresolved}, unused=${report.summary.unused})`)
-    console.log(`  wrote ${outDir}`)
+    progress.done(
+      'scanned ' + report.summary.filesScanned + ' file(s); findings: ' +
+      report.summary.findings + ' (unresolved=' + report.summary.unresolved +
+      ', unused=' + report.summary.unused + '); wrote ' + outDir
+    )
   }
   if (opts.fail && report.summary.unresolved > 0) process.exit(1)
 }
