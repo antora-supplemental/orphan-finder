@@ -5,7 +5,7 @@
 
 **Orphan Finder** scans AsciiDoc trees for unresolved `include::` targets and `{attribute}` references, plus unused attribute definitions and unreferenced partials. Emits JSON + a triage HTML page built with https://github.com/antora-supplemental/triage-ux-kit[triage-ux-kit].
 
-For **pages missing from `nav.adoc`**, use https://github.com/antora-supplemental/nav-drift[nav-drift] (`--require-in-nav`) and mark intentional xref-only pages with `:page-nav-hidden:`.
+For **pages missing from `nav.adoc`**, use https://github.com/antora-supplemental/nav-drift[nav-drift] (`--require-in-nav`) and mark intentional xref-only pages with `:hide-from-navtree:` (legacy `:page-nav-hidden:` still parses).
 
 Support: support@devcentr.org
 
